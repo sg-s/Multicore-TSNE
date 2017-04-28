@@ -48,9 +48,10 @@ This table shows a relative to 1 core speed-up when using `n` cores.
 First, get this repository 
 
 ```
-git clone https://github.com/DmitryUlyanov/Multicore-TSNE.git
+git clone https://github.com/sg-s/Multicore-TSNE.git
 cd Multicore-TSNE/
 ```
+
 Make sure you have `gcc` installed:
 
 ```
@@ -71,6 +72,7 @@ Then, compile using
 export CC="/usr/local/bin/gcc-6"; export CXX="/usr/local/bin/gcc-6"; python setup.py install
 ```
 
+Make sure you modify the paths in the command above to point to where `gcc` is. This command should be run in the main folder (that contains `setup.py`)
 
 ### Run
 
