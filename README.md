@@ -42,26 +42,35 @@ This table shows a relative to 1 core speed-up when using `n` cores.
 | 4             | 2.6x      | 1.2x     |
 | 8             | 5.6x      | 1.65x    |
 
-# How to use
 
-Python and torch wrappers are available.
+## Installation (macOS specific)
 
-## Python
-### Install
+First, get this repository 
 
-Make sure `cmake` is installed on your system.
-
-To install the package please do:
 ```
 git clone https://github.com/DmitryUlyanov/Multicore-TSNE.git
 cd Multicore-TSNE/
-pip install --no-cache-dir .
+```
+Make sure you have `gcc` installed:
+
+```
+brew install gcc --without-multilib
 ```
 
-It's important that you add `--no-cache-dir` otherwise pip won't copy
-the `.so` file which is needed at runtime.
+The issue with installing this on macOS is that you need a modern version of `gcc`, and the one that ships on your computer by default won't work. I used `gcc-6`. Use the latest one. Assuming you have `gcc-6`, determine where this is:
 
-Tested with both Python 2.7 and 3.6 (conda) and Ubuntu 14.04. Never tested on MacOS, something similar to [this](https://github.com/RobeDM/LIBIRWLS#compiling-1) should be done for successful compilation. Also read this [issue](https://github.com/DmitryUlyanov/Multicore-TSNE/issues/1).
+```
+which gcc-6
+```
+
+and modify `setup.py` (line 21) to make sure it points to the right version. 
+
+Then, compile using
+
+```
+export CC="/usr/local/bin/gcc-6"; export CXX="/usr/local/bin/gcc-6"; python setup.py install
+```
+
 
 ### Run
 

@@ -1,1 +1,5 @@
 python/tests/mnist.pkl.gz
+*MulticoreTSNE.egg-info/*
+multicore_tsne/release/*
+*.so
+build/
