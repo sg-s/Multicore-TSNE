@@ -58,10 +58,10 @@ Make sure you have `gcc` installed:
 brew install gcc --without-multilib
 ```
 
-The issue with installing this on macOS is that you need a modern version of `gcc`, and the one that ships on your computer by default won't work. I used `gcc-6`. Use the latest one. Assuming you have `gcc-6`, determine where this is:
+The issue with installing this on macOS is that you need a modern version of `gcc`, and the one that ships on your computer by default won't work. I used `gcc-7`. Use the latest one. Assuming you have `gcc-7`, determine where this is:
 
 ```
-which gcc-6
+which gcc-7
 ```
 
 and modify `setup.py` (line 21) to make sure it points to the right version. 
@@ -69,7 +69,7 @@ and modify `setup.py` (line 21) to make sure it points to the right version.
 Then, compile using
 
 ```
-export CC="/usr/local/bin/gcc-6"; export CXX="/usr/local/bin/gcc-6"; python setup.py install
+export CC="/usr/local/bin/gcc-7"; export CXX="/usr/local/bin/gcc-7"; python setup.py install
 ```
 
 Make sure you modify the paths in the command above to point to where `gcc` is. This command should be run in the main folder (that contains `setup.py`)
