@@ -3,3 +3,5 @@ python/tests/mnist.pkl.gz
 multicore_tsne/release/*
 *.so
 build/
+*.pkl
+*.gz
