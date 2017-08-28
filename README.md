@@ -74,7 +74,7 @@ export CC="/usr/local/bin/gcc-7"; export CXX="/usr/local/bin/gcc-7"; python setu
 
 Make sure you modify the paths in the command above to point to where `gcc` is. This command should be run in the main folder (that contains `setup.py`)
 
-### Run
+### Run (within python)
 
 You can use it as a drop-in replacement for [sklearn.manifold.TSNE](http://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.htm).
 
@@ -93,12 +93,40 @@ Only double arrays are supported for now. For this implementation `n_components`
 - n_iter
 - angle
 
-### Test
+### Test (using python)
 
 You can test it on MNIST dataset with the following command:
 
 ```
 python python/tests/test.py <n_jobs>
+```
+
+### Notes on running from within MATLAB 
+
+I have a MATLAB wrapper for this: `mctsne.m`. Make sure MATLAB knows where you python installation (and Multicore-tSNE) is installed. The output of 
+
+```
+% in matlab
+system('which python')
+```
+
+should be the same as 
+```
+# bash
+which python
+```
+If it's not, add it to your MATLAB path. The best thing to do is to add this snippet to your `startup.m` so that your paths are always correct. (In this example, I'm using Anaconda. If your python installation is somewhere else, modify accordingly:)
+
+```
+% paths for Multicore TSNE
+[~,home_path] = system('cd ~; pwd');
+a_path = strrep('~/anaconda/bin','~',strtrim(home_path));
+path1 = getenv('PATH');
+if isempty(strfind(path1,[pathsep a_path]))
+    path1 = [a_path pathsep path1];
+end
+setenv('PATH', path1);
+
 ```
 
 #### Note on jupyter use
@@ -107,27 +135,6 @@ To make the computation log visible in jupyter please install `wurlitzer` (`pip 
 %load_ext wurlitzer
 ```
 Memory leakages are possible if you interrupt the process. Should be OK if you let it run until the end.
-
-## Torch
-
-To install execute the following command from repository folder:
-```
-luarocks make torch/tsne-1.0-0.rockspec
-```
-or
-
-```
-luarocks install https://raw.githubusercontent.com/DmitryUlyanov/Multicore-TSNE/master/torch/tsne-1.0-0.rockspec
-```
-
-You can run t-SNE like that:
-```
-tsne = require 'tsne'
-
-Y = tsne(X, n_components, perplexity, n_iter, angle, n_jobs)
-```
-
-`torch.DoubleTensor` type only supported for now.
 
 # License
 
