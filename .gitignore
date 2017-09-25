@@ -5,3 +5,4 @@ multicore_tsne/release/*
 build/
 *.pkl
 *.gz
+*.DS_Store
