@@ -6,3 +6,4 @@ build/
 *.pkl
 *.gz
 *.DS_Store
+*.sublime-workspace
