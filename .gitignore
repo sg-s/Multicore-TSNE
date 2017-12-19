@@ -7,3 +7,4 @@ build/
 *.gz
 *.DS_Store
 *.sublime-workspace
+*.cache

@@ -16,6 +16,18 @@ elseif nargin < 3
 	perplexity = 30;
 end
 
+% check cache
+temp.Vs = Vs;
+temp.perplexity = perplexity;
+temp.n_iter = n_iter;
+h = dataHash(temp);
+
+
+if exist(joinPath(fileparts(which(mfilename)),[h '.cache']),'file') == 2
+	load(joinPath(fileparts(which(mfilename)),[h '.cache']),'-mat')
+	return
+end
+
 save('Vs.mat','Vs','-v7.3')
 
 perplexity = floor(perplexity);
@@ -35,3 +47,4 @@ R = h5read('data.h5','/R');
 delete('data.h5')
 delete('Vs.mat')
 
+save(joinPath(fileparts(which(mfilename)),[h '.cache']),'R');
