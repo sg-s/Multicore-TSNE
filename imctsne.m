@@ -7,24 +7,63 @@
 % pick a nice perplexity and view the embedding 
 % before settling on it. 
 
-function R = imctsne(Vs)
+function R = imctsne(Vs,C)
 
-	R = NaN;
-	save('Vs.mat','Vs','-v7.3')
+
+	if nargin == 2
+		% color provided
+		c = parula(100);
+
+		cidx = C;
+
+		colorbar_limits = [min(C) max(C)];
+
+		cidx = cidx - min(cidx);
+		cidx = cidx/max(cidx);
+		cidx = ceil(cidx*99) + 1;
+
+		C = c(cidx,:);
+
+	else
+		% no color, default to grey
+		C = zeros(length(Vs),3) + .5;
+	end
+
+
+	R = NaN(2,length(C));
+
+	opacity = .5;
 
 	% make the UI
 	handles.fig = figure('Name','Interactive t-SNE','NumberTitle','off','position',[50 50 1000 700], 'Toolbar','figure','Menubar','none','CloseRequestFcn',@close_imctsne,'WindowButtonDownFcn',@mouseCallback); hold on,axis off
-	handles.ax(1) = axes('parent',handles.fig,'position',[-0.1 0.1 0.85 0.85],'box','on','TickDir','out');axis square, hold on ; title('Reduced Data')
+	handles.ax(1) = axes('parent',handles.fig,'position',[-0.1 0.1 0.85 0.85],'box','on','TickDir','out');axis square, hold on ; title('Reduced Data');
+	axis off
+	handles.red_data = scatter(R(1,:),R(2,:),128,C,'filled','Marker','o','MarkerFaceAlpha',opacity,'MarkerEdgeAlpha',opacity);
+
+
+	if nargin == 2
+		handles.color_bar = colorbar;
+		handles.color_bar.Position = [.65 .5 .02 .45];
+		caxis(colorbar_limits)
+	end
+
 	handles.ax(2) = axes('parent',handles.fig,'position',[0.65 0.1 0.3 0.3],'box','on','TickDir','out');axis square, hold on  ; title('Raw data'), set(gca,'YLim',[min(min(Vs)) max(max(Vs))]);
 	set(handles.ax(1),'XTickLabel',{},'YTickLabel',{})
 
 
-	handles.red_data = plot(handles.ax(1),NaN,NaN,'k+');
 
-	handles.full_data = plot(handles.ax(2),Vs,'Color',[.7 .7 .7]);
+
+	if size(Vs,2) > 200
+		sls = floor(22939/200);
+		handles.full_data = plot(handles.ax(2),Vs(:,1:sls:end),'Color',[.7 .7 .7]);
+	else
+		handles.full_data = plot(handles.ax(2),Vs,'Color',[.7 .7 .7]);
+	end
+
 	handles.current_pt = plot(handles.ax(2),NaN,NaN,'k','LineWidth',2);
 
 	prettyFig('font_units','points');
+
 
 	% make a puppeteer figure
 	lb.n_iter = 100;
@@ -40,14 +79,12 @@ function R = imctsne(Vs)
 
 	embed(S);
 
+
 	p = puppeteer(S,lb,ub,U,false);
 	p.callback_function = @embed;
 
 	uiwait(handles.fig);
-	
-	% clean up
-	delete('data.h5')
-	delete('Vs.mat')
+
 
 
 	function embed(params)
@@ -56,19 +93,16 @@ function R = imctsne(Vs)
 		n_iter = floor(params.n_iter);
 
 
-		p1 = ['"' fileparts(which('mctsne'))];
-		eval_str =  [p1 oss 'mctsne.py" ' oval(perplexity) ' ' oval(n_iter)];
-
-		system(eval_str)
-
-		% read the solution
-		R = h5read('data.h5','/R');
+		R = mctsne(Vs,n_iter,perplexity);
 
 		handles.red_data.XData = R(1,:);
 		handles.red_data.YData = R(2,:);
 
-		handles.ax(1).XLim = [min(R(1,:)) max(R(2,:))];
-		handles.ax(1).YLim = [min(R(2,:)) max(R(2,:))];
+		xr =  max(R(1,:)) - min(R(1,:));
+		yr =  max(R(2,:)) - min(R(2,:));
+
+		handles.ax(1).XLim = [min(R(1,:)) - xr/10 max(R(1,:)) + xr/10];
+		handles.ax(1).YLim = [min(R(2,:)) - yr/10 max(R(2,:)) + yr/10];
 
 	end
 

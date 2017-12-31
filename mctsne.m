@@ -16,6 +16,10 @@ elseif nargin < 3
 	perplexity = 30;
 end
 
+assert(~any(isnan(Vs(:))),'Input cannot contain NaN values')
+assert(~any(isinf(Vs(:))),'Input cannot contain Inf values')
+
+
 % check cache
 temp.Vs = Vs;
 temp.perplexity = perplexity;
