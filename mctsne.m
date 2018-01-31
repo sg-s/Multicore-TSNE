@@ -2,10 +2,7 @@
 % MATLAB wrapper for Dmitry Ulyanov's Multicore t-SNE 
 % implementation
 % this wrapper assumes you have the python wrapper set up
-% and calls that. 
-% also supports an interactive mode so you can
-% pick a nice perplexity and view the embedding 
-% before settling on it. 
+% and calls that.  
 
 function R = mctsne(Vs,n_iter,perplexity)
 
@@ -38,6 +35,16 @@ perplexity = floor(perplexity);
 n_iter = floor(n_iter);
 assert(n_iter > 10,'n_iter too low')
 assert(perplexity > 2,'perplexity too low')
+
+p1 = ['python "' fileparts(which('mctsne'))];
+
+% first check if the environment is right using the test script
+eval_str =  [p1 oss 'mctsne_test.py" '];
+[e,o] = system(eval_str);
+if e ~=0
+	warning('MulticoreTSNE test failed...attempting to fix path')
+	conda.setenv('mctsne')
+end
 
 p1 = ['"' fileparts(which('mctsne'))];
 eval_str =  [p1 oss 'mctsne.py" ' oval(perplexity) ' ' oval(n_iter)];

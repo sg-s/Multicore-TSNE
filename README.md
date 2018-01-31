@@ -43,7 +43,9 @@ This table shows a relative to 1 core speed-up when using `n` cores.
 | 8             | 5.6x      | 1.65x    |
 
 
-## Installation (macOS specific)
+## Installation (macOS, MATLAB specific)
+
+### Setup
 
 First, get this repository 
 
@@ -66,6 +68,29 @@ which gcc-7
 
 and modify `setup.py` (line 21) to make sure it points to the right version. 
 
+### Prepare your python environment
+
+I strongly reccomend that you use Anaconda and install this in a `conda` environment. That way, you can segment the dependencies for this and avoid the awful Python dependency hell that people seem to relish so much. 
+
+1. Download Anaconda [here](https://www.anaconda.com/download/)
+2. Create a new conda enviornment: `conda create -n mctsne pip`
+3. Switch to that environment: `source activate mctsne`
+4. Within that environment, install some dependencies manually:
+
+```bash
+# the -U matters
+pip install -U setuptools
+pip install numpy
+pip install h5py
+pip install cffi
+pip install psutil
+pip install scipy
+```
+
+OK, now you're ready to compile
+
+### Compiling
+
 Then, compile using
 
 ```
@@ -74,7 +99,25 @@ export CC="/usr/local/bin/gcc-7"; export CXX="/usr/local/bin/gcc-7"; python setu
 
 Make sure you modify the paths in the command above to point to where `gcc` is. This command should be run in the main folder (that contains `setup.py`)
 
-### Run (within python)
+## Using this from MATLAB
+
+I hope you've followed all the steps above. For use from within MATLAB,
+you'll have to install some helper code. The simplest way to do this is to use my package manager from within your MATLAB prompt
+```
+% copy and paste this code in your MATLAB prompt
+urlwrite('http://srinivas.gs/install.m','install.m'); 
+install -f sg-s/srinivas.gs_mtools   
+install -f sg-s/Multicore-TSNE % fast t-sne embedding 
+install -f sg-s/condalab % switch between python envs
+```
+That's it! Test using
+
+```matlab
+mctsne(randn(1000,500))
+```
+
+
+## Run (within python)
 
 You can use it as a drop-in replacement for [sklearn.manifold.TSNE](http://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.htm).
 
@@ -93,40 +136,12 @@ Only double arrays are supported for now. For this implementation `n_components`
 - n_iter
 - angle
 
-### Test (using python)
+## Test (using python)
 
 You can test it on MNIST dataset with the following command:
 
 ```
 python python/tests/test.py <n_jobs>
-```
-
-### Notes on running from within MATLAB 
-
-I have a MATLAB wrapper for this: `mctsne.m`. Make sure MATLAB knows where you python installation (and Multicore-tSNE) is installed. The output of 
-
-```
-% in matlab
-system('which python')
-```
-
-should be the same as 
-```
-# bash
-which python
-```
-If it's not, add it to your MATLAB path. The best thing to do is to add this snippet to your `startup.m` so that your paths are always correct. (In this example, I'm using Anaconda. If your python installation is somewhere else, modify accordingly:)
-
-```
-% paths for Multicore TSNE
-[~,home_path] = system('cd ~; pwd');
-a_path = strrep('~/anaconda/bin','~',strtrim(home_path));
-path1 = getenv('PATH');
-if isempty(strfind(path1,[pathsep a_path]))
-    path1 = [a_path pathsep path1];
-end
-setenv('PATH', path1);
-
 ```
 
 #### Note on jupyter use
@@ -157,6 +172,15 @@ Please cite this repository if it was useful for your research:
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/DmitryUlyanov/Muticore-TSNE}},
+}
+
+@misc{Gorur-Shandilya2018,
+  author = {Gorur-Shandilya, Srinivas},
+  title = {Muticore-TSNE (MATLAB wrapper)},
+  year = {2018},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/sg-s/Muticore-TSNE}},
 }
 ```
 
