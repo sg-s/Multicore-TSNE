@@ -39,7 +39,7 @@ assert(perplexity > 2,'perplexity too low')
 p1 = ['python "' fileparts(which('mctsne'))];
 
 % first check if the environment is right using the test script
-eval_str =  [p1 oss 'mctsne_test.py" '];
+eval_str =  [p1 filesep 'mctsne_test.py" '];
 [e,o] = system(eval_str);
 if e ~=0
 	warning('MulticoreTSNE test failed...attempting to fix path')
@@ -47,7 +47,7 @@ if e ~=0
 end
 
 p1 = ['"' fileparts(which('mctsne'))];
-eval_str =  [p1 oss 'mctsne.py" ' oval(perplexity) ' ' oval(n_iter)];
+eval_str =  [p1 filesep 'mctsne.py" ' oval(perplexity) ' ' oval(n_iter)];
 
 system(eval_str)
 
