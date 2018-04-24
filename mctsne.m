@@ -21,7 +21,7 @@ assert(~any(isinf(Vs(:))),'Input cannot contain Inf values')
 temp.Vs = Vs;
 temp.perplexity = perplexity;
 temp.n_iter = n_iter;
-h = dataHash(temp);
+h = GetMD5(temp,'Array');
 
 
 if exist(joinPath(fileparts(which(mfilename)),[h '.cache']),'file') == 2
