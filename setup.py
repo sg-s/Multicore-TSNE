@@ -18,7 +18,7 @@ class MyInstall(install):
             os.makedirs('multicore_tsne/release')
 
         os.chdir('multicore_tsne/release/')
-        return_val = os.system('cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/local/bin/gcc-7 -DCMAKE_BUILD_TYPE=RELEASE .. ')
+        return_val = os.system('cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc-8 -DCMAKE_CXX_COMPILER=/usr/local/bin/gcc-8 -DCMAKE_BUILD_TYPE=RELEASE .. ')
 
         if return_val != 0:
             print('cannot find cmake')
